@@ -287,8 +287,12 @@ function distinct(arr) {
  *    createNDimensionalArray(4, 2) => [[[[0, 0], [0, 0]], [[0, 0], [0, 0]]], [[[0, 0], [0, 0]], [[0, 0], [0, 0]]]]
  *    createNDimensionalArray(1, 1) => [0]
  */
-function createNDimensionalArray(/* n, size */) {
-  throw new Error('Not implemented');
+function createNDimensionalArray(n, size) {
+  if (n === 1) {
+    return Array(size).fill(0);
+  }
+
+  return Array(size).fill(createNDimensionalArray(n - 1, size));
 }
 
 /**
@@ -353,8 +357,17 @@ function calculateBalance(arr) {
  *    createChunks(['a', 'b', 'c', 'd', 'e'], 2) => [['a', 'b'], ['c', 'd'], ['e']]
  *    createChunks([10, 20, 30, 40, 50], 1) => [[10], [20], [30], [40], [50]]
  */
-function createChunks(/* arr, chunkSize */) {
-  throw new Error('Not implemented');
+function createChunks(arr, chunkSize) {
+  const chunksArr = [];
+
+  arr.map((_, index) => {
+    if (index % chunkSize === 0) {
+      return chunksArr.push(arr.slice(index, index + chunkSize));
+    }
+    return '';
+  });
+
+  return chunksArr;
 }
 
 /**
@@ -388,8 +401,18 @@ function generateOdds(len) {
  *   getElementByIndices(['one','two','three'], [2]) => 'three'  (arr[2])
  *   getElementByIndices([[[ 1, 2, 3]]], [ 0, 0, 1 ]) => 2        (arr[0][0][1])
  */
-function getElementByIndices(/* arr, indices */) {
-  throw new Error('Not implemented');
+function getElementByIndices(arr, indices) {
+  let newArr = arr;
+  let newIndicesArr = indices;
+  const deepnessCount = newIndicesArr.length;
+
+  if (deepnessCount > 1) {
+    newArr = newArr.flat();
+    newIndicesArr = newIndicesArr.slice(1);
+    return getElementByIndices(newArr, newIndicesArr);
+  }
+
+  return arr[newIndicesArr[0]];
 }
 
 /**
@@ -519,8 +542,24 @@ function findCommonElements(arr1, arr2) {
  *    findLongestIncreasingSubsequence([3, 10, 2, 1, 20]) => 2
  *    findLongestIncreasingSubsequence([50, 3, 10, 7, 40, 80]) => 3
  */
-function findLongestIncreasingSubsequence(/* nums */) {
-  throw new Error('Not implemented');
+function findLongestIncreasingSubsequence(nums) {
+  const countArr = [];
+  let count = 0;
+
+  nums.map((cur, index) => {
+    count += 1;
+    if (cur > nums[index + 1]) {
+      countArr.push(count);
+      count = 0;
+      return count;
+    }
+    if (nums[index + 1] === undefined) {
+      return countArr.push(count);
+    }
+    return count;
+  });
+
+  return Math.max(...countArr);
 }
 
 /**
